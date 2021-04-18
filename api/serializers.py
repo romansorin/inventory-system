@@ -39,18 +39,11 @@ class ItemSerializer(serializers.ModelSerializer):
         return item
 
     def update(self, instance, validated_data):
-        location_data = validated_data.pop('location')
-        category_data = validated_data.pop('category')
+        (validated_data, category_data,
+         location_data) = self.get_relationship_fields(validated_data)
 
-        # If the location field is provided, we want to:
-        # 1. Check if the instance has an existing location relationship
-        # 2. If it does, check if the location name and relationship match
-        # 3. If they don't match, find the provided location and attach it
-
-        location = Location.objects.filter(
-            name=location_data['location']).first()
-
-        # If the location field is not provided, remove the relationship entirely
+        self.handle_category_field(category_data, instance)
+        self.handle_location_field(location_data, instance)
 
         instance.description = validated_data.get(
             'description', instance.description)
@@ -59,6 +52,7 @@ class ItemSerializer(serializers.ModelSerializer):
             'replacement_link', instance.replacement_link)
         instance.replacement_cost = validated_data.get(
             'replacement_link', instance.replacement_cost)
+        instance.save()
 
         return instance
 
@@ -78,6 +72,14 @@ class ItemSerializer(serializers.ModelSerializer):
             if category is None and category_data.get('name') is not None:
                 category = Category.objects.create(**category_data)
             category.item_set.add(item)
+        else:
+            category = item.category
+            if category is None:
+                return
+            else:
+                category.item_set.remove(item)
+                item.category = None
+                item.save()
         return
 
     def handle_location_field(self, location_data, item):
@@ -87,4 +89,12 @@ class ItemSerializer(serializers.ModelSerializer):
             if location is None and location_data.get('name') is not None:
                 location = Location.objects.create(**location_data)
             location.item_set.add(item)
+        else:
+            location = item.location
+            if location is None:
+                return
+            else:
+                location.item_set.remove(item)
+                item.location = None
+                item.save()
         return

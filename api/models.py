@@ -4,7 +4,8 @@ from django.db import models
 class Item(models.Model):
     description = models.CharField(max_length=200)
     in_use = models.BooleanField()
-    replacement_link = models.CharField(max_length=200, null=True)
+    replacement_link = models.URLField(
+        max_length=200, null=True)
     replacement_cost = models.DecimalField(
         max_digits=19, decimal_places=2, null=True)
     category = models.ForeignKey(
