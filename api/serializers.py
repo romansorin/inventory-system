@@ -16,8 +16,9 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    location = LocationSerializer(read_only=True)
 
     class Meta:
         model = Item
         fields = ['id', 'description', 'in_use', 'replacement_link',
-                  'replacement_cost', 'created_at', 'updated_at', 'category']
+                  'replacement_cost', 'created_at', 'updated_at', 'category', 'location']
