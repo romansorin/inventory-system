@@ -32,6 +32,7 @@ class ItemSerializer(serializers.ModelSerializer):
         item = Item.objects.create(**validated_data)
 
         # Note/TODO: running into an issue where I cannot provide a null category/location field to unset/prevent setting the relation, despite having null and blank fields defined
+        # I do not always want to attach a location/category to an item, either because it doesn't fit some level of granulity, or it just doesn't exist yet
         category = Category.objects.filter(name=category_data['name']).first()
         if category is None and category_data.get('name') is not None:
             category = Category.objects.create(**category_data)
