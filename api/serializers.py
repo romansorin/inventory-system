@@ -1,8 +1,5 @@
-import logging
 from rest_framework import serializers
 from .models import Item, Location, Category
-
-logger = logging.getLogger(__name__)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -30,7 +27,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         (validated_data, category_data,
-         location_data) = self.get_relationship_fields(validated_data)
+         location_data) = self.get_relationship_data(validated_data)
         item = Item.objects.create(**validated_data)
 
         self.handle_category_field(category_data, item)
@@ -40,7 +37,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         (validated_data, category_data,
-         location_data) = self.get_relationship_fields(validated_data)
+         location_data) = self.get_relationship_data(validated_data)
 
         self.handle_category_field(category_data, instance)
         self.handle_location_field(location_data, instance)
@@ -56,7 +53,15 @@ class ItemSerializer(serializers.ModelSerializer):
 
         return instance
 
-    def get_relationship_fields(self, validated_data):
+    def get_relationship_data(self, validated_data):
+        """Returns data corresponding to category and location relations
+
+        Args:
+            validated_data (OrderedDict): Data passed from the initial request
+
+        Returns:
+            tuple: The new validated data dict, category data, and location data, if present.
+        """
         category_data = None
         location_data = None
         if validated_data.get('location'):
@@ -66,6 +71,12 @@ class ItemSerializer(serializers.ModelSerializer):
         return (validated_data, category_data, location_data)
 
     def handle_category_field(self, category_data, item):
+        """Handles the setting or unsetting of the category relation for an item.
+
+        Args:
+            category_data (OrderedDict)
+            item (Item)
+        """
         if category_data is not None:
             category = Category.objects.filter(
                 name=category_data['name']).first()
@@ -83,6 +94,12 @@ class ItemSerializer(serializers.ModelSerializer):
         return
 
     def handle_location_field(self, location_data, item):
+        """Handles the setting or unsetting of the location relation for an item.
+
+        Args:
+            location_data (OrderedDict)
+            item (Item)
+        """
         if location_data is not None:
             location = Location.objects.filter(
                 name=location_data['name']).first()
