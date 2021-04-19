@@ -1,0 +1,14 @@
+asgiref==3.3.4
+autopep8==1.5.6
+Django==3.2
+django-cors-headers==3.7.0
+djangorestframework==3.12.4
+gitdb==4.0.5
+GitPython==3.1.7
+psycopg2==2.8.6
+pycodestyle==2.7.0
+pytz==2021.1
+smmap==3.0.4
+sqlparse==0.4.1
+TBB==0.1
+toml==0.10.2

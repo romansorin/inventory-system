@@ -5,9 +5,9 @@ class Item(models.Model):
     description = models.CharField(max_length=200)
     in_use = models.BooleanField()
     replacement_link = models.URLField(
-        max_length=200, null=True)
+        max_length=200, blank=True, null=True)
     replacement_cost = models.DecimalField(
-        max_digits=19, decimal_places=2, null=True)
+        max_digits=19, blank=True, decimal_places=2, null=True)
     category = models.ForeignKey(
         'Category', null=True, blank=True, on_delete=models.SET_NULL)
     location = models.ForeignKey(
