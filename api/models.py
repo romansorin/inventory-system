@@ -8,7 +8,7 @@ class Item(models.Model):
         max_length=200, blank=True, null=True)
     replacement_cost = models.DecimalField(
         max_digits=19, blank=True, decimal_places=2, null=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
     category = models.ForeignKey(
         'Category', null=True, blank=True, on_delete=models.SET_NULL)
     location = models.ForeignKey(

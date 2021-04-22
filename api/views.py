@@ -1,5 +1,6 @@
 from .models import Item, Category, Location
 from .serializers import ItemSerializer, CategorySerializer, LocationSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
 
 
@@ -15,6 +16,7 @@ class ItemDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Get, update, or delete an item.
     """
+    parser_classes = [MultiPartParser, FormParser]
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
