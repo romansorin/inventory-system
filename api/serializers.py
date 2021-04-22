@@ -23,7 +23,7 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['id', 'description', 'in_use', 'replacement_link',
-                  'replacement_cost', 'created_at', 'updated_at', 'category', 'location']
+                  'replacement_cost', 'image', 'created_at', 'updated_at', 'category', 'location']
 
     def create(self, validated_data):
         (validated_data, category_data,
